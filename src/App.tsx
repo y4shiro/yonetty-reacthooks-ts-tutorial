@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import Modal from 'react-modal';
@@ -27,9 +27,25 @@ const customStyles = {
   },
 };
 
+// LocalStorage へのアクセスキーを定義
+const APP_KEY = 'react-hooks-tutorial';
+
 const App = () => {
   const [books, setBooks] = useState([] as BookToRead[]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  // 書籍一覧データを LocalStorage から読み込む
+  useEffect(() => {
+    const storedBooks = localStorage.getItem(APP_KEY);
+    if (storedBooks) {
+      setBooks(JSON.parse(storedBooks));
+    }
+  }, []);
+
+  // 書籍一覧データを LocalStorage に保存
+  useEffect(() => {
+    localStorage.setItem(APP_KEY, JSON.stringify(books));
+  }, [books]);
 
   const handleBookAdd = (book: BookDescription) => {
     const newBook: BookToRead = { ...book, id: Date.now(), memo: '' };
