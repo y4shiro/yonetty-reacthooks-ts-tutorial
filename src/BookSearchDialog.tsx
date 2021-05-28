@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookDescription } from './BookDescription';
 import BookSearchItem from './BookSearchItem';
 import { useBookData } from './useBookData';
@@ -11,19 +11,18 @@ type BookSearchDialogProps = {
 const BookSearchDialog = (props: BookSearchDialogProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
 
-  const [books, setIsSearching] = useBookData(
-    titleRef.current ? titleRef.current!.value : '',
-    authorRef.current ? authorRef.current!.value : '',
-    props.maxResults
-  );
+  const books = useBookData(title, author, props.maxResults);
 
   const handleSearchClick = () => {
     if (!titleRef.current!.value && !authorRef.current!.value) {
       alert('検索条件を入力してください');
       return;
     }
-    setIsSearching(true);
+    setTitle(titleRef.current!.value);
+    setAuthor(authorRef.current!.value);
   };
 
   const handleBookAdd = (book: BookDescription) => {
